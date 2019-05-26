@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -61,14 +61,30 @@
 		2BA6D464229B430C00183BC9 /* CurrencyConverter */ = {
 			isa = PBXGroup;
 			children = (
+				2BE80FE7229B47ED008817F4 /* UI */,
+				2BE80FE6229B47E7008817F4 /* Core */,
 				2BA6D465229B430C00183BC9 /* AppDelegate.swift */,
-				2BA6D467229B430C00183BC9 /* ViewController.swift */,
-				2BA6D469229B430C00183BC9 /* Main.storyboard */,
 				2BA6D46C229B431000183BC9 /* Assets.xcassets */,
 				2BA6D46E229B431000183BC9 /* LaunchScreen.storyboard */,
 				2BA6D471229B431000183BC9 /* Info.plist */,
 			);
 			path = CurrencyConverter;
+			sourceTree = "<group>";
+		};
+		2BE80FE6229B47E7008817F4 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		2BE80FE7229B47ED008817F4 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				2BA6D469229B430C00183BC9 /* Main.storyboard */,
+				2BA6D467229B430C00183BC9 /* ViewController.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 		51DB16114F41928EA333B88E /* Frameworks */ = {
@@ -85,7 +101,6 @@
 				9FFF63D18116CFD4EAB4DF14 /* Pods-CurrencyConverter.debug.xcconfig */,
 				7A6AA8303D3074E1398863FF /* Pods-CurrencyConverter.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

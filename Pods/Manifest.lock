@@ -1,13 +1,13 @@
 PODS:
   - Alamofire (5.0.0-beta.6)
-  - Eureka (3.0.0)
+  - Eureka (5.0.0)
   - SnapKit (5.0.0)
   - SwifterSwift/Foundation (5.0.0)
   - SwifterSwift/UIKit (5.0.0)
 
 DEPENDENCIES:
   - Alamofire (~> 5.0.0-beta.5)
-  - Eureka (~> 3.0.0)
+  - Eureka
   - SnapKit (~> 5.0.0)
   - SwifterSwift/Foundation
   - SwifterSwift/UIKit
@@ -21,10 +21,10 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: cd08a4402bd12cacd0c66f23fb12fec8d6b965e4
-  Eureka: f36fd440c3ebb7bfea0a4fbe6f16a05f1cb35906
+  Eureka: 0f64f477ec8ef6201c6fec143d60ff5c201cf654
   SnapKit: fd22d10eb9aff484d79a8724eab922c1ddf89bcf
   SwifterSwift: 96f90594b370802f01647c2b1229c74a84ffafee
 
-PODFILE CHECKSUM: 7daa9e7a7094802b7f937581f64d6472df14f181
+PODFILE CHECKSUM: 4f9872825f0f6edc0a323efb37dced90b6aa1471
 
 COCOAPODS: 1.7.0.beta.2

@@ -1,7 +1,8 @@
-//  SelectableRowType.swift
+//
+//  AlertOptionsRow.swift
 //  Eureka ( https://github.com/xmartlabs/Eureka )
 //
-//  Copyright (c) 2016 Xmartlabs ( http://xmartlabs.com )
+//  Copyright (c) 2016 Xmartlabs SRL ( http://xmartlabs.com )
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,9 +25,17 @@
 
 import Foundation
 
-/**
- *  Every row that shall be used in a SelectableSection must conform to this protocol.
- */
-public protocol SelectableRowType: RowType {
-    var selectableValue: Cell.Value? { get set }
+
+import Foundation
+
+open class AlertOptionsRow<Cell: CellType> : OptionsRow<Cell>, AlertOptionsProviderRow where Cell: BaseCell {
+
+    typealias OptionsProviderType = OptionsProvider<Cell.Value>
+
+    open var cancelTitle: String?
+
+    required public init(tag: String?) {
+        super.init(tag: tag)
+    }
+
 }
