@@ -7,11 +7,11 @@
 */
 
 "numberOfDollarBillsSectionTitle" = "NUMBER OF DOLLAR BILLS";
-"numberOfOnesBillsFieldCaption" = "#1$ bills";
+"numberOfOnesBillsFieldCaption" = "# of 1$";
 
 "resultsPerCurrencySectionTitle" = "YOU HAVE...";
 "resultsForSecondsCaption" = "or...";
 
 "loadingCopy" = "Loading...";
 
-"comparisonChartSectionTitle" = "COMPARISON CHART"
+"comparisonChartSectionTitle" = "COMPARISON CHART";

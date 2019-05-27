@@ -42,5 +42,37 @@
             </objects>
             <point key="canvasLocation" x="71" y="-170"/>
         </scene>
+        <!--Chart View Controller-->
+        <scene sceneID="sL3-bN-WlE">
+            <objects>
+                <viewController storyboardIdentifier="chartVC" id="vfi-2F-15e" customClass="ChartViewController" customModule="CurrencyConverter" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oXm-ob-qft">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="300"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lem-W2-s6m" customClass="BarChartView" customModule="Charts">
+                                <rect key="frame" x="0.0" y="5" width="414" height="300"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="lem-W2-s6m" firstAttribute="leading" secondItem="O83-2k-Ads" secondAttribute="leading" id="GNF-rS-suq"/>
+                            <constraint firstItem="lem-W2-s6m" firstAttribute="centerY" secondItem="O83-2k-Ads" secondAttribute="centerY" id="JNV-Xq-kYd"/>
+                            <constraint firstItem="O83-2k-Ads" firstAttribute="trailing" secondItem="lem-W2-s6m" secondAttribute="trailing" id="Nwp-lg-tSP"/>
+                            <constraint firstItem="lem-W2-s6m" firstAttribute="height" secondItem="oXm-ob-qft" secondAttribute="height" id="ku7-jS-lSk"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="O83-2k-Ads"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="414" height="300"/>
+                    <connections>
+                        <outlet property="barChart" destination="lem-W2-s6m" id="mjw-RJ-hfp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zaR-ff-hAO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-368.11594202898556" y="429.91071428571428"/>
+        </scene>
     </scenes>
 </document>

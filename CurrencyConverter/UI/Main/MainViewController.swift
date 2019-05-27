@@ -8,14 +8,19 @@
 
 import UIKit
 import Eureka
+import ViewRow
 
 protocol MainViewControllerProtocol : class {
     
     func buildFormFields(withOutputCurrencies currencies: [Currency])
     
+    func buildChartFormField(withExchangeSet exchangeSet: ExchangeSet)
+    
     func updateOutput(forCurrency currency: Currency, withRate rate: Double)
     
     func displayError(withText text: String)
+    
+    func updateChart(withExchangeSet exchangeSet: ExchangeSet)
     
 }
 
@@ -27,7 +32,7 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
         
         struct String {
             static let numberOfDollarBillsSectionTitleComment = "NUMBER OF DOLLAR BILLS"
-            static let numberOfOnesBillsFieldCaptionComment = "#1$ bills"
+            static let numberOfOnesBillsFieldCaptionComment = "# of 1$"
             static let numberOfOnesBillsFieldDefaultValue = "0"
             
             static let resultsPerCurrencySectionTitleComment = "YOU HAVE..."
@@ -63,6 +68,8 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
     var chartSection: Section!
     
     var outputCurrencyTextRows = [Currency: TextRow]()
+    
+    var chartVC: ChartViewController?
     
     // MARK: Stored Properties
     
@@ -104,6 +111,43 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
         present(vc, animated: true, completion: nil)
     }
     
+    func buildChartFormField(withExchangeSet exchangeSet: ExchangeSet) {
+        let chartSectionName = NSLocalizedString("comparisonChartSectionTitle", comment: K.String.comparisonChartSectionTitleComment)
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        chartVC = storyboard.instantiateViewController(withIdentifier: "chartVC") as? ChartViewController
+        chartVC?.setData(exchangeSet)
+        
+        guard let chartVC = chartVC else {
+            return
+        }
+        
+        let viewRow = ViewRow<UIView>().cellSetup { [unowned self] (cell, row) in
+            self.beginAppearanceTransition(true, animated: true)
+            cell.view = chartVC.view
+            self.endAppearanceTransition()
+            chartVC.setData(exchangeSet)
+        }
+        
+        chartSection = Section(chartSectionName)
+            <<< viewRow
+        
+        chartSection.hidden = Condition.function([K.Tag.inputFieldTag], {
+            guard let inputTextRow = $0.rowBy(tag: K.Tag.inputFieldTag) as? TextRow, let value = inputTextRow.value, let intValue = Int(value) else {
+                return true
+            }
+            
+            return intValue <= 0
+        })
+        
+        form +++ chartSection
+    }
+    
+    func updateChart(withExchangeSet exchangeSet: ExchangeSet) {
+        chartVC?.setData(exchangeSet)
+    }
+    
     // MARK: Private Operations
     
     private func buildInputFormFields() {
@@ -122,6 +166,15 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
             }
             
             self?.presenter.numberOfDollarsDidChange(toValue: intValue)
+        }).onCellSelection({ (cell, row) in
+            guard let value = row.value, let intValue = Int(value) else {
+                // New value is not valid to process
+                return
+            }
+            
+            if intValue <= 0 {
+                row.value = ""
+            }
         })
         
         inputSection = Section(inputSectionName)
@@ -169,14 +222,6 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
         })
         
         form +++ outputSection
-    }
-    
-    private func buildChartFormField() {
-        let chartSectionName = NSLocalizedString("comparisonChartSectionTitle", comment: K.String.comparisonChartSectionTitleComment)
-        
-        //let viewRow = 
-        
-        chartSection = Section(chartSectionName)
     }
 
 }

@@ -15,6 +15,8 @@ enum Currency : String, Codable {
     case JPY
     case BRL
     
+    case UNK
+    
     var raw: String {
         switch self {
         case .USD:
@@ -27,6 +29,42 @@ enum Currency : String, Codable {
             return "JPY"
         case .BRL:
             return "BRL"
+        case .UNK:
+            return ""
+        }
+    }
+    
+    var asInteger: Int {
+        switch self {
+        case .USD:
+            return -1
+        case .GBP:
+            return 1
+        case .EUR:
+            return 2
+        case .JPY:
+            return 3
+        case .BRL:
+            return 4
+        case .UNK:
+            return 0
+        }
+    }
+    
+    static func from(int: Int) -> Currency {
+        switch int {
+        case 0:
+            return .UNK
+        case 1:
+            return .GBP
+        case 2:
+            return .EUR
+        case 3:
+            return .JPY
+        case 4:
+            return .BRL
+        default:
+            return .UNK
         }
     }
 }

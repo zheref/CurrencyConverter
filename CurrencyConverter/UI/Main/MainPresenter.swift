@@ -8,10 +8,11 @@
 
 import Foundation
 
+typealias ExchangeSet = [Currency: Double?]
 
 protocol MainPresenterProtocol : GenericPresenterProtocol {
     
-    var currentValues: [Currency: Double?] { get set }
+    var currentValues: ExchangeSet { get set }
     
     func attach(view: MainViewControllerProtocol)
     func dettachView()
@@ -31,7 +32,7 @@ class MainPresenter : MainPresenterProtocol {
     
     let outputCurrencies: [Currency] = [.GBP, .EUR, .JPY, .BRL]
     
-    var currentValues: [Currency: Double?] = [
+    var currentValues: ExchangeSet = [
         .GBP: nil,
         .EUR: nil,
         .JPY: nil,
@@ -80,6 +81,7 @@ class MainPresenter : MainPresenterProtocol {
                 
                 DispatchQueue.main.async {
                     strongSelf.view?.updateOutput(forCurrency: outputCurrency, withRate: actualResult)
+                    strongSelf.view?.updateChart(withExchangeSet: strongSelf.currentValues)
                 }
             }
         }
@@ -89,6 +91,7 @@ class MainPresenter : MainPresenterProtocol {
     
     func viewIsReady() {
         view?.buildFormFields(withOutputCurrencies: outputCurrencies)
+        view?.buildChartFormField(withExchangeSet: currentValues)
     }
     
     func viewIsBeingDisplayed() {

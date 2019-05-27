@@ -26,6 +26,8 @@ struct Rates : Codable {
             return BRL
         case .USD:
             return 1
+        default:
+            return 0
         }
     }
 }
