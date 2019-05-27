@@ -15,7 +15,7 @@ protocol MainViewControllerProtocol : class {
     
     func buildInputFormFields()
     
-    func buildOutputFormFields(withOutputCurrencies currencies: [Currency])
+    func buildOutputFormFields(withExchangeSet exchangeSet: ExchangeSet)
     
     func buildChartFormField(withExchangeSet exchangeSet: ExchangeSet)
     
@@ -49,6 +49,10 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
         struct Tag {
             static let inputFieldTag = "inputField"
             static let genericOutputFieldTagSuffix = "OutputField"
+        }
+        
+        struct Measure {
+            static let polesMargin: CGFloat = 5.0
         }
         
     }
@@ -129,46 +133,36 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
         form +++ inputSection
     }
     
-    func buildOutputFormFields(withOutputCurrencies currencies: [Currency]) {
+    func buildOutputFormFields(withExchangeSet exchangeSet: ExchangeSet) {
+        // Localized copies
         let outputSectionName = NSLocalizedString("resultsPerCurrencySectionTitle", comment: K.String.resultsPerCurrencySectionTitleComment)
         let secondsOutputCaption = NSLocalizedString("resultsForSecondsCaption", comment: K.String.resultsForSecondsCaption)
-        
         let loadingCopy = NSLocalizedString("loadingCopy", comment: K.String.loadingCopyComment)
         
         outputSection = Section(outputSectionName)
         
-        for (index, outputCurrency) in currencies.enumerated() {
-            let textRow = TextRow("\(outputCurrency.raw.lowercased())\(K.Tag.genericOutputFieldTagSuffix)") {
-                $0.title = index > 0 ? secondsOutputCaption : " "
+        var isFirst = true
+        
+        for (currency, rate) in exchangeSet {
+            let textRowTag = "\(currency.raw.lowercased())\(K.Tag.genericOutputFieldTagSuffix)"
+            
+            let textRow = TextRow(textRowTag) {
+                $0.title = !isFirst ? secondsOutputCaption : " "
                 
-                if let currentValue = self.presenter.currentValues[outputCurrency], currentValue != nil {
-                    $0.value = String(format: "%.2f \(outputCurrency.raw)", currentValue!)
+                if rate != nil {
+                    $0.value = String(format: "%.2f \(currency.raw)", rate!)
                 } else {
                     $0.value = loadingCopy
                 }
                 
-                }.cellSetup(outputCellSetup)
+            }.cellSetup(outputCellSetup)
             
-            outputCurrencyTextRows[outputCurrency] = textRow
-            
+            outputCurrencyTextRows[currency] = textRow
             outputSection <<< textRow
+            isFirst = false
         }
         
-        outputSection.hidden = Condition.function([K.Tag.inputFieldTag], {
-            guard let inputTextRow = $0.rowBy(tag: K.Tag.inputFieldTag) as? TextRow else {
-                return true
-            }
-            
-            guard let value = inputTextRow.value, let intValue = Int(value) else {
-                let allRatesArePresent = self.presenter.currentValues.all(matching: { (currency, rate) -> Bool in
-                    return rate != nil
-                })
-                
-                return !allRatesArePresent
-            }
-            
-            return intValue <= 0
-        })
+        outputSection.hidden = Condition.function([K.Tag.inputFieldTag], outputHidingConditionClosure)
         
         form +++ outputSection
     }
@@ -193,44 +187,12 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
         chartVC = storyboard.instantiateViewController(withIdentifier: "chartVC") as? ChartViewController
         chartVC?.setData(exchangeSet)
         
-        guard let chartVC = chartVC else {
-            return
-        }
-        
         let viewRow = ViewRow<UIView>().cellSetup { [unowned self] (cell, row) in
-            self.beginAppearanceTransition(true, animated: true)
-            let containerView = UIView(frame: CGRect(x: 0, y: 0, width: chartVC.view.width, height: 200))
-            containerView.addSubview(chartVC.view)
-            chartVC.view.snp.makeConstraints({ (make) in
-                make.size.equalToSuperview()
-                make.center.equalToSuperview()
-            })
-            cell.view = containerView
-            cell.viewTopMargin = 5
-            cell.viewBottomMargin = 5
-            self.endAppearanceTransition()
-            chartVC.setData(exchangeSet)
+            self.invokeChartCreation(intoCell: cell, withSet: exchangeSet)
         }
         
-        chartSection = Section(chartSectionName)
-            <<< viewRow
-        
-        chartSection.hidden = Condition.function([K.Tag.inputFieldTag], {
-            guard let inputTextRow = $0.rowBy(tag: K.Tag.inputFieldTag) as? TextRow else {
-                return true
-            }
-            
-            guard let value = inputTextRow.value, let intValue = Int(value) else {
-                let allRatesArePresent = self.presenter.currentValues.all(matching: { (currency, rate) -> Bool in
-                    return rate != nil
-                })
-                
-                return !allRatesArePresent
-            }
-            
-            return intValue <= 0
-        })
-        
+        chartSection = Section(chartSectionName) <<< viewRow
+        chartSection.hidden = Condition.function([K.Tag.inputFieldTag], outputHidingConditionClosure)
         form +++ chartSection
     }
     
@@ -239,6 +201,45 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
     }
     
     // MARK: Private Operations
+    
+    private func invokeChartCreation(intoCell cell: ViewCell<UIView>, withSet exchangeSet: ExchangeSet) {
+        guard let chartVC = chartVC else {
+            return
+        }
+        
+        beginAppearanceTransition(true, animated: true)
+        
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: chartVC.view.width, height: 200))
+        containerView.addSubview(chartVC.view)
+        
+        chartVC.view.snp.makeConstraints({ (make) in
+            make.size.equalToSuperview()
+            make.center.equalToSuperview()
+        })
+        
+        cell.view = containerView
+        cell.viewTopMargin = K.Measure.polesMargin
+        cell.viewBottomMargin = K.Measure.polesMargin
+        
+        endAppearanceTransition()
+        chartVC.setData(exchangeSet)
+    }
+    
+    private func outputHidingConditionClosure(_ form: Form) -> Bool {
+        guard let inputTextRow = form.rowBy(tag: K.Tag.inputFieldTag) as? TextRow else {
+            return true
+        }
+        
+        guard let value = inputTextRow.value, let intValue = Int(value) else {
+            let allRatesArePresent = presenter.currentValues.all(matching: { currency, rate -> Bool in
+                return rate != nil
+            })
+            
+            return !allRatesArePresent
+        }
+        
+        return intValue <= 0
+    }
     
     private func outputCellSetup(cell: TextCell, row: TextRow) {
         cell.textField.isEnabled = false

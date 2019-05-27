@@ -92,7 +92,7 @@ class MainPresenter : MainPresenterProtocol {
     func viewIsReady() {
         view?.buildInputFormFields()
         view?.buildChartFormField(withExchangeSet: currentValues)
-        view?.buildOutputFormFields(withOutputCurrencies: outputCurrencies)
+        view?.buildOutputFormFields(withExchangeSet: currentValues)
     }
     
     func viewIsBeingDisplayed() {

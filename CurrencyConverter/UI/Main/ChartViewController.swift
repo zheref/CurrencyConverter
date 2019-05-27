@@ -12,6 +12,7 @@ import Charts
 protocol ChartViewControllerProtocol {
     
     func setData(_ set: ExchangeSet)
+    func updateChart()
     
 }
 
@@ -53,7 +54,6 @@ class ChartViewController: UIViewController, ChartViewControllerProtocol {
     
     private func setupBarChart() {
         barChart.delegate = self
-        
         barChart.chartDescription?.enabled = false
         barChart.maxVisibleCount = 30
         barChart.pinchZoomEnabled = false
@@ -63,11 +63,9 @@ class ChartViewController: UIViewController, ChartViewControllerProtocol {
         barChart.scaleYEnabled = false
         barChart.autoScaleMinMaxEnabled = true
         barChart.doubleTapToZoomEnabled = false
-        
         barChart.xAxis.labelPosition = .bottom
         barChart.xAxis.valueFormatter = self
         barChart.xAxis.granularity = 1.0
-        
         barChart.legend.enabled = false
     }
     
@@ -101,15 +99,12 @@ class ChartViewController: UIViewController, ChartViewControllerProtocol {
         }
         
         barChart.animate(yAxisDuration: 1.5)
-        //barChart.setNeedsDisplay()
         barChart.fitScreen()
     }
 
 }
 
 extension ChartViewController : ChartViewDelegate {
-    
-    
     
 }
 
