@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  CurrencyConverter
+
+  Created by Sergio Daniel on 5/26/19.
+  Copyright © 2019 Sergio Daniel. All rights reserved.
+*/
+
+"numberOfDollarBillsSectionTitle" = "NUMBER OF DOLLAR BILLS";
+"numberOfOnesBillsFieldCaption" = "#1$ bills";
+
+"resultsPerCurrencySectionTitle" = "YOU HAVE...";
+"resultsForSecondsCaption" = "or...";

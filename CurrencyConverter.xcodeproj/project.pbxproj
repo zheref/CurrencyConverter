@@ -15,6 +15,7 @@
 		2BE80FEB229B4C1E008817F4 /* MainPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE80FEA229B4C1E008817F4 /* MainPresenter.swift */; };
 		2BE80FED229B4D3F008817F4 /* ConversionFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE80FEC229B4D3F008817F4 /* ConversionFetcher.swift */; };
 		2BE80FF0229B507B008817F4 /* GenericPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE80FEF229B507B008817F4 /* GenericPresenter.swift */; };
+		2BE80FF2229B581D008817F4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2BE80FF1229B581D008817F4 /* Localizable.strings */; };
 		6B33ED9ABB87C2D4A5A514BE /* Pods_CurrencyConverter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABA9F88E703AFF97ACA3173F /* Pods_CurrencyConverter.framework */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +30,7 @@
 		2BE80FEA229B4C1E008817F4 /* MainPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPresenter.swift; sourceTree = "<group>"; };
 		2BE80FEC229B4D3F008817F4 /* ConversionFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversionFetcher.swift; sourceTree = "<group>"; };
 		2BE80FEF229B507B008817F4 /* GenericPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericPresenter.swift; sourceTree = "<group>"; };
+		2BE80FF1229B581D008817F4 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		7A6AA8303D3074E1398863FF /* Pods-CurrencyConverter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CurrencyConverter.release.xcconfig"; path = "Target Support Files/Pods-CurrencyConverter/Pods-CurrencyConverter.release.xcconfig"; sourceTree = "<group>"; };
 		9FFF63D18116CFD4EAB4DF14 /* Pods-CurrencyConverter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CurrencyConverter.debug.xcconfig"; path = "Target Support Files/Pods-CurrencyConverter/Pods-CurrencyConverter.debug.xcconfig"; sourceTree = "<group>"; };
 		ABA9F88E703AFF97ACA3173F /* Pods_CurrencyConverter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CurrencyConverter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,6 +92,7 @@
 			children = (
 				2BE80FEE229B5068008817F4 /* Generic */,
 				2BE80FE9229B4BEA008817F4 /* Main */,
+				2BE80FF1229B581D008817F4 /* Localizable.strings */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -190,6 +193,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2BA6D470229B431000183BC9 /* LaunchScreen.storyboard in Resources */,
+				2BE80FF2229B581D008817F4 /* Localizable.strings in Resources */,
 				2BA6D46D229B431000183BC9 /* Assets.xcassets in Resources */,
 				2BA6D46B229B430C00183BC9 /* Main.storyboard in Resources */,
 			);
