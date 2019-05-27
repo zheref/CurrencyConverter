@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 typealias LatestRatesHandler = (LatestRatesResponse?, Error?) -> Void
 
@@ -42,7 +41,6 @@ class ConversionFetcher : ConversionFetcherProtocol {
     // MARK: Exposed Operations
     
     func fetchLatestRates(completion: LatestRatesHandler) {
-        //Alamofire.request("\(K.Url.base)/latest/\()")
         
     }
     

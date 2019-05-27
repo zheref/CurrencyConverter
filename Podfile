@@ -9,7 +9,6 @@ target 'CurrencyConverter' do
   
   pod 'SwifterSwift/Foundation'
   pod 'SwifterSwift/UIKit'
-  pod 'Alamofire'
   pod 'SnapKit', '~> 5.0.0'
   pod 'Eureka'
 
