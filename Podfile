@@ -12,6 +12,7 @@ target 'CurrencyConverter' do
   pod 'SwifterSwift/UIKit'
   pod 'SnapKit', '~> 5.0.0'
   pod 'Eureka'
+  pod 'ViewRow', :git => 'https://github.com/EurekaCommunity/ViewRow'
   pod 'Charts'
 
 end

@@ -34,6 +34,8 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
             static let resultsForSecondsCaption = "or..."
             
             static let loadingCopyComment = "Loading..."
+            
+            static let comparisonChartSectionTitleComment = "COMPARISON CHART"
         }
         
         struct Tag {
@@ -57,6 +59,8 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
     var euroOutputTextRow: TextRow!
     var yenOutputTextRow: TextRow!
     var reaisOutputTextRow: TextRow!
+    
+    var chartSection: Section!
     
     var outputCurrencyTextRows = [Currency: TextRow]()
     
@@ -165,6 +169,14 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
         })
         
         form +++ outputSection
+    }
+    
+    private func buildChartFormField() {
+        let chartSectionName = NSLocalizedString("comparisonChartSectionTitle", comment: K.String.comparisonChartSectionTitleComment)
+        
+        //let viewRow = 
+        
+        chartSection = Section(chartSectionName)
     }
 
 }

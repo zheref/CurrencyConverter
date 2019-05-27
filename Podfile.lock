@@ -7,6 +7,8 @@ PODS:
   - SwifterSwift/Foundation (5.0.0)
   - SwifterSwift/SwiftStdlib (5.0.0)
   - SwifterSwift/UIKit (5.0.0)
+  - ViewRow (0.4.0):
+    - Eureka (>= 4.0.0)
 
 DEPENDENCIES:
   - Charts
@@ -15,6 +17,7 @@ DEPENDENCIES:
   - SwifterSwift/Foundation
   - SwifterSwift/SwiftStdlib
   - SwifterSwift/UIKit
+  - ViewRow (from `https://github.com/EurekaCommunity/ViewRow`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -23,12 +26,22 @@ SPEC REPOS:
     - SnapKit
     - SwifterSwift
 
+EXTERNAL SOURCES:
+  ViewRow:
+    :git: https://github.com/EurekaCommunity/ViewRow
+
+CHECKOUT OPTIONS:
+  ViewRow:
+    :commit: fdb0ad7e3ed763fc671f6d68749d3620a242d81d
+    :git: https://github.com/EurekaCommunity/ViewRow
+
 SPEC CHECKSUMS:
   Charts: ec1f57f9340054155691e84d4544a1d239d382c5
   Eureka: 0f64f477ec8ef6201c6fec143d60ff5c201cf654
   SnapKit: fd22d10eb9aff484d79a8724eab922c1ddf89bcf
   SwifterSwift: 96f90594b370802f01647c2b1229c74a84ffafee
+  ViewRow: 513d444dcfe53d58f8a6469065329c507c5e4973
 
-PODFILE CHECKSUM: a5acdb0dede67c27f54435ddb8a61cb9aa3bfc40
+PODFILE CHECKSUM: cca2a79b70c3b24aeba9f9858effe7b176242390
 
 COCOAPODS: 1.7.0.beta.2
