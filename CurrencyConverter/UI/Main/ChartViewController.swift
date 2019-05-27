@@ -64,9 +64,9 @@ class ChartViewController: UIViewController, ChartViewControllerProtocol {
         barChart.autoScaleMinMaxEnabled = true
         barChart.doubleTapToZoomEnabled = false
         
-        
         barChart.xAxis.labelPosition = .bottom
         barChart.xAxis.valueFormatter = self
+        barChart.xAxis.granularity = 1.0
         
         barChart.legend.enabled = false
     }
@@ -100,7 +100,8 @@ class ChartViewController: UIViewController, ChartViewControllerProtocol {
             barChart.fitBars = true
         }
         
-        barChart.setNeedsDisplay()
+        barChart.animate(yAxisDuration: 1.5)
+        //barChart.setNeedsDisplay()
         barChart.fitScreen()
     }
 

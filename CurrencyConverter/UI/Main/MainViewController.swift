@@ -48,7 +48,6 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
         
         struct Tag {
             static let inputFieldTag = "inputField"
-            
             static let genericOutputFieldTagSuffix = "OutputField"
         }
         
