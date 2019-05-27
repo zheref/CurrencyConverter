@@ -12,5 +12,6 @@ target 'CurrencyConverter' do
   pod 'SwifterSwift/UIKit'
   pod 'SnapKit', '~> 5.0.0'
   pod 'Eureka'
+  pod 'Charts'
 
 end
