@@ -60,6 +60,7 @@
 		2BA6D459229B430C00183BC9 = {
 			isa = PBXGroup;
 			children = (
+				2BE80FFF229C5AE5008817F4 /* README.md */,
 				2BA6D464229B430C00183BC9 /* CurrencyConverter */,
 				2BA6D463229B430C00183BC9 /* Products */,
 				B8307943E6303B67AD69F392 /* Pods */,
@@ -85,7 +86,6 @@
 				2BA6D46C229B431000183BC9 /* Assets.xcassets */,
 				2BA6D46E229B431000183BC9 /* LaunchScreen.storyboard */,
 				2BA6D471229B431000183BC9 /* Info.plist */,
-				2BE80FFF229C5AE5008817F4 /* README.md */,
 			);
 			path = CurrencyConverter;
 			sourceTree = "<group>";

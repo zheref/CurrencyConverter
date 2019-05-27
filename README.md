@@ -11,8 +11,8 @@
 2. If you're running on the Simulator instead of an actual device, I would strongly suggest to used the Software Keyboard since it will stop you from entering non-numeric characters on the _Amount of Dollars_ text field.
 
 ## Technical Details
-**Source code language:** Swift 5.0
-**Patterns used:** MVP, Singleton, Delegation, Decorator
+**Source code language:** Swift 5.0  
+**Patterns used:** MVP, Singleton, Delegation, Decorator  
 **Good practices followed:**  Dependency Injection, Localized Strings, Avoiding Literals, AutoLayout, S.O.L.I.D.
 
 ### Target
