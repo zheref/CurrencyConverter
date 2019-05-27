@@ -15,3 +15,6 @@
 "loadingCopy" = "Loading...";
 
 "comparisonChartSectionTitle" = "COMPARISON CHART";
+
+"errorTitle" = "Error";
+"okCopy" = "Ok";

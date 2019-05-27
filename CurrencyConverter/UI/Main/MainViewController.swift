@@ -36,7 +36,7 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
         struct String {
             static let numberOfDollarBillsSectionTitleComment = "NUMBER OF DOLLAR BILLS"
             static let numberOfOnesBillsFieldCaptionComment = "# of 1$"
-            static let numberOfOnesBillsFieldDefaultValue = "0"
+            static let numberOfOnesBillsFieldDefaultValue = ""
             
             static let resultsPerCurrencySectionTitleComment = "YOU HAVE..."
             static let resultsForSecondsCaption = "or..."
@@ -53,6 +53,15 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
         
         struct Measure {
             static let polesMargin: CGFloat = 5.0
+            static let chartHeight: CGFloat = 200
+        }
+        
+        struct Storyboard {
+            static let main = "Main"
+        }
+        
+        struct ViewController {
+            static let chartVC = "chartVC"
         }
         
     }
@@ -78,6 +87,10 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
     var chartVC: ChartViewController?
     
     // MARK: Stored Properties
+    
+    var mainStoryboard: UIStoryboard {
+        return UIStoryboard(name: K.Storyboard.main, bundle: nil)
+    }
     
     let presenter: MainPresenterProtocol = MainPresenter(conversionFetcher: ConversionFetcher.standard)
     
@@ -174,17 +187,18 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
     }
     
     func displayError(withText text: String) {
-        let vc = UIAlertController(title: "Error", message: text, preferredStyle: .alert)
-        vc.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        let errorTitle = NSLocalizedString("errorTitle", comment: "Error")
+        let okCopy = NSLocalizedString("okCopy", comment: "Ok")
+        
+        let vc = UIAlertController(title: errorTitle, message: text, preferredStyle: .alert)
+        vc.addAction(UIAlertAction(title: okCopy, style: .default, handler: nil))
         present(vc, animated: true, completion: nil)
     }
     
     func buildChartFormField(withExchangeSet exchangeSet: ExchangeSet) {
         let chartSectionName = NSLocalizedString("comparisonChartSectionTitle", comment: K.String.comparisonChartSectionTitleComment)
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        
-        chartVC = storyboard.instantiateViewController(withIdentifier: "chartVC") as? ChartViewController
+        chartVC = mainStoryboard.instantiateViewController(withIdentifier: K.ViewController.chartVC) as? ChartViewController
         chartVC?.setData(exchangeSet)
         
         let viewRow = ViewRow<UIView>().cellSetup { [unowned self] (cell, row) in
@@ -209,7 +223,7 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
         
         beginAppearanceTransition(true, animated: true)
         
-        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: chartVC.view.width, height: 200))
+        let containerView = UIView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: chartVC.view.width, height: K.Measure.chartHeight)))
         containerView.addSubview(chartVC.view)
         
         chartVC.view.snp.makeConstraints({ (make) in
