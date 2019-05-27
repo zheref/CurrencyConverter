@@ -75,12 +75,11 @@ class MainPresenter : MainPresenterProtocol {
                 let rate = response.rates[outputCurrency]
                 
                 let actualResult = Double(value) * rate
-                let roundedResult = actualResult.rounded(byDecimals: 5)
                 
-                self?.currentValues[outputCurrency] = roundedResult
+                self?.currentValues[outputCurrency] = actualResult
                 
                 DispatchQueue.main.async {
-                    strongSelf.view?.updateOutput(forCurrency: outputCurrency, withRate: roundedResult)
+                    strongSelf.view?.updateOutput(forCurrency: outputCurrency, withRate: actualResult)
                 }
             }
         }

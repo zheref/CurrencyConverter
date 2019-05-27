@@ -90,7 +90,7 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
     
     func updateOutput(forCurrency currency: Currency, withRate rate: Double) {
         let outputRow = outputCurrencyTextRows[currency]
-        outputRow?.value = "\(rate) \(currency.raw)"
+        outputRow?.value = String(format: "%.5f \(currency.raw)", rate)
         outputSection.reload()
     }
     
@@ -144,7 +144,7 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
                 $0.title = index > 0 ? secondsOutputCaption : " "
                 
                 if let currentValue = self.presenter.currentValues[outputCurrency], currentValue != nil {
-                    $0.value = "\(currentValue) \(outputCurrency.raw)"
+                    $0.value = String(format: "%.5f \(outputCurrency.raw)", currentValue!)
                 } else {
                     $0.value = loadingCopy
                 }
