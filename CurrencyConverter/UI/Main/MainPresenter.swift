@@ -90,8 +90,9 @@ class MainPresenter : MainPresenterProtocol {
     // MARK: Generalized Exposed Presenter Operations
     
     func viewIsReady() {
-        view?.buildFormFields(withOutputCurrencies: outputCurrencies)
+        view?.buildInputFormFields()
         view?.buildChartFormField(withExchangeSet: currentValues)
+        view?.buildOutputFormFields(withOutputCurrencies: outputCurrencies)
     }
     
     func viewIsBeingDisplayed() {

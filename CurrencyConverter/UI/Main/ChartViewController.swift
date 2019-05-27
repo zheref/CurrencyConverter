@@ -64,6 +64,7 @@ class ChartViewController: UIViewController, ChartViewControllerProtocol {
         barChart.autoScaleMinMaxEnabled = true
         barChart.doubleTapToZoomEnabled = false
         
+        
         barChart.xAxis.labelPosition = .bottom
         barChart.xAxis.valueFormatter = self
         

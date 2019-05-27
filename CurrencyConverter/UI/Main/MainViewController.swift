@@ -9,10 +9,13 @@
 import UIKit
 import Eureka
 import ViewRow
+import SnapKit
 
 protocol MainViewControllerProtocol : class {
     
-    func buildFormFields(withOutputCurrencies currencies: [Currency])
+    func buildInputFormFields()
+    
+    func buildOutputFormFields(withOutputCurrencies currencies: [Currency])
     
     func buildChartFormField(withExchangeSet exchangeSet: ExchangeSet)
     
@@ -94,14 +97,86 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
     
     // MARK: Exposed Operations -> Protocol Exposed
     
-    func buildFormFields(withOutputCurrencies currencies: [Currency]) {
-        buildInputFormFields()
-        buildOutputFormFields(withOutputCurrencies: currencies)
+    func buildInputFormFields() {
+        let inputSectionName = NSLocalizedString("numberOfDollarBillsSectionTitle", comment: K.String.numberOfDollarBillsSectionTitleComment)
+        let inputFieldCaption = NSLocalizedString("numberOfOnesBillsFieldCaption", comment: K.String.numberOfOnesBillsFieldCaptionComment)
+        
+        inputTextRow = TextRow(K.Tag.inputFieldTag) {
+            $0.title = inputFieldCaption
+            $0.value = K.String.numberOfOnesBillsFieldDefaultValue
+            }.cellSetup({ cell, row in
+                cell.textField.keyboardType = .numberPad
+            }).onChange({ [weak self] (row) in
+                guard let value = row.value, let intValue = Int(value) else {
+                    // New value is not valid to process
+                    return
+                }
+                
+                self?.presenter.numberOfDollarsDidChange(toValue: intValue)
+            }).onCellSelection({ (cell, row) in
+                guard let value = row.value, let intValue = Int(value) else {
+                    // New value is not valid to process
+                    return
+                }
+                
+                if intValue <= 0 {
+                    row.value = ""
+                }
+            })
+        
+        inputSection = Section(inputSectionName)
+            <<< inputTextRow
+        
+        form +++ inputSection
+    }
+    
+    func buildOutputFormFields(withOutputCurrencies currencies: [Currency]) {
+        let outputSectionName = NSLocalizedString("resultsPerCurrencySectionTitle", comment: K.String.resultsPerCurrencySectionTitleComment)
+        let secondsOutputCaption = NSLocalizedString("resultsForSecondsCaption", comment: K.String.resultsForSecondsCaption)
+        
+        let loadingCopy = NSLocalizedString("loadingCopy", comment: K.String.loadingCopyComment)
+        
+        outputSection = Section(outputSectionName)
+        
+        for (index, outputCurrency) in currencies.enumerated() {
+            let textRow = TextRow("\(outputCurrency.raw.lowercased())\(K.Tag.genericOutputFieldTagSuffix)") {
+                $0.title = index > 0 ? secondsOutputCaption : " "
+                
+                if let currentValue = self.presenter.currentValues[outputCurrency], currentValue != nil {
+                    $0.value = String(format: "%.2f \(outputCurrency.raw)", currentValue!)
+                } else {
+                    $0.value = loadingCopy
+                }
+                
+                }.cellSetup(outputCellSetup)
+            
+            outputCurrencyTextRows[outputCurrency] = textRow
+            
+            outputSection <<< textRow
+        }
+        
+        outputSection.hidden = Condition.function([K.Tag.inputFieldTag], {
+            guard let inputTextRow = $0.rowBy(tag: K.Tag.inputFieldTag) as? TextRow else {
+                return true
+            }
+            
+            guard let value = inputTextRow.value, let intValue = Int(value) else {
+                let allRatesArePresent = self.presenter.currentValues.all(matching: { (currency, rate) -> Bool in
+                    return rate != nil
+                })
+                
+                return !allRatesArePresent
+            }
+            
+            return intValue <= 0
+        })
+        
+        form +++ outputSection
     }
     
     func updateOutput(forCurrency currency: Currency, withRate rate: Double) {
         let outputRow = outputCurrencyTextRows[currency]
-        outputRow?.value = String(format: "%.5f \(currency.raw)", rate)
+        outputRow?.value = String(format: "%.2f \(currency.raw)", rate)
         outputSection.reload()
     }
     
@@ -125,7 +200,15 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
         
         let viewRow = ViewRow<UIView>().cellSetup { [unowned self] (cell, row) in
             self.beginAppearanceTransition(true, animated: true)
-            cell.view = chartVC.view
+            let containerView = UIView(frame: CGRect(x: 0, y: 0, width: chartVC.view.width, height: 200))
+            containerView.addSubview(chartVC.view)
+            chartVC.view.snp.makeConstraints({ (make) in
+                make.size.equalToSuperview()
+                make.center.equalToSuperview()
+            })
+            cell.view = containerView
+            cell.viewTopMargin = 5
+            cell.viewBottomMargin = 5
             self.endAppearanceTransition()
             chartVC.setData(exchangeSet)
         }
@@ -134,8 +217,16 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
             <<< viewRow
         
         chartSection.hidden = Condition.function([K.Tag.inputFieldTag], {
-            guard let inputTextRow = $0.rowBy(tag: K.Tag.inputFieldTag) as? TextRow, let value = inputTextRow.value, let intValue = Int(value) else {
+            guard let inputTextRow = $0.rowBy(tag: K.Tag.inputFieldTag) as? TextRow else {
                 return true
+            }
+            
+            guard let value = inputTextRow.value, let intValue = Int(value) else {
+                let allRatesArePresent = self.presenter.currentValues.all(matching: { (currency, rate) -> Bool in
+                    return rate != nil
+                })
+                
+                return !allRatesArePresent
             }
             
             return intValue <= 0
@@ -150,78 +241,9 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
     
     // MARK: Private Operations
     
-    private func buildInputFormFields() {
-        let inputSectionName = NSLocalizedString("numberOfDollarBillsSectionTitle", comment: K.String.numberOfDollarBillsSectionTitleComment)
-        let inputFieldCaption = NSLocalizedString("numberOfOnesBillsFieldCaption", comment: K.String.numberOfOnesBillsFieldCaptionComment)
-        
-        inputTextRow = TextRow(K.Tag.inputFieldTag) {
-            $0.title = inputFieldCaption
-            $0.value = K.String.numberOfOnesBillsFieldDefaultValue
-        }.cellSetup({ cell, row in
-            cell.textField.keyboardType = .numberPad
-        }).onChange({ [weak self] (row) in
-            guard let value = row.value, let intValue = Int(value) else {
-                // New value is not valid to process
-                return
-            }
-            
-            self?.presenter.numberOfDollarsDidChange(toValue: intValue)
-        }).onCellSelection({ (cell, row) in
-            guard let value = row.value, let intValue = Int(value) else {
-                // New value is not valid to process
-                return
-            }
-            
-            if intValue <= 0 {
-                row.value = ""
-            }
-        })
-        
-        inputSection = Section(inputSectionName)
-            <<< inputTextRow
-        
-        form +++ inputSection
-    }
-    
     private func outputCellSetup(cell: TextCell, row: TextRow) {
         cell.textField.isEnabled = false
         cell.textField.isUserInteractionEnabled = false
-    }
-    
-    private func buildOutputFormFields(withOutputCurrencies currencies: [Currency]) {
-        let outputSectionName = NSLocalizedString("resultsPerCurrencySectionTitle", comment: K.String.resultsPerCurrencySectionTitleComment)
-        let secondsOutputCaption = NSLocalizedString("resultsForSecondsCaption", comment: K.String.resultsForSecondsCaption)
-        
-        let loadingCopy = NSLocalizedString("loadingCopy", comment: K.String.loadingCopyComment)
-        
-        outputSection = Section(outputSectionName)
-        
-        for (index, outputCurrency) in currencies.enumerated() {
-            let textRow = TextRow("\(outputCurrency.raw.lowercased())\(K.Tag.genericOutputFieldTagSuffix)") {
-                $0.title = index > 0 ? secondsOutputCaption : " "
-                
-                if let currentValue = self.presenter.currentValues[outputCurrency], currentValue != nil {
-                    $0.value = String(format: "%.5f \(outputCurrency.raw)", currentValue!)
-                } else {
-                    $0.value = loadingCopy
-                }
-                
-            }.cellSetup(outputCellSetup)
-            
-            outputCurrencyTextRows[outputCurrency] = textRow
-            
-            outputSection <<< textRow
-        }
-        
-        outputSection.hidden = Condition.function([K.Tag.inputFieldTag], {
-            guard let inputTextRow = $0.rowBy(tag: K.Tag.inputFieldTag) as? TextRow, let value = inputTextRow.value, let intValue = Int(value) else {
-                return true
-            }
-            
-            return intValue <= 0
-        })
-        
-        form +++ outputSection
     }
 
 }
