@@ -8,6 +8,7 @@ target 'CurrencyConverter' do
   # Pods for CurrencyConverter
   
   pod 'SwifterSwift/Foundation'
+  pod 'SwifterSwift/SwiftStdlib'
   pod 'SwifterSwift/UIKit'
   pod 'SnapKit', '~> 5.0.0'
   pod 'Eureka'

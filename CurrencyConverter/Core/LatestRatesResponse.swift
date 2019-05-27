@@ -8,12 +8,34 @@
 
 import Foundation
 
+struct Rates : Codable {
+    var GBP: Double
+    var EUR: Double
+    var JPY: Double
+    var BRL: Double
+    
+    subscript(key: Currency) -> Double {
+        switch(key) {
+        case .GBP:
+            return GBP
+        case .EUR:
+            return EUR
+        case .JPY:
+            return JPY
+        case .BRL:
+            return BRL
+        case .USD:
+            return 1
+        }
+    }
+}
+
 struct LatestRatesResponse : Codable {
     
     var success: Bool
     var timestamp: TimeInterval
     var base: Currency
     var date: String
-    var rates: [Currency: Double]
+    var rates: Rates
     
 }

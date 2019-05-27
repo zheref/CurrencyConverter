@@ -11,6 +11,8 @@ import Foundation
 
 protocol MainPresenterProtocol : GenericPresenterProtocol {
     
+    var currentValues: [Currency: Double?] { get set }
+    
     func attach(view: MainViewControllerProtocol)
     func dettachView()
     
@@ -26,6 +28,15 @@ class MainPresenter : MainPresenterProtocol {
     
     private let conversionFetcher: ConversionFetcherProtocol
     weak private var view: MainViewControllerProtocol?
+    
+    let outputCurrencies: [Currency] = [.GBP, .EUR, .JPY, .BRL]
+    
+    var currentValues: [Currency: Double?] = [
+        .GBP: nil,
+        .EUR: nil,
+        .JPY: nil,
+        .BRL: nil
+    ]
     
     // MARK: - INITIALIZERS
     
@@ -51,13 +62,34 @@ class MainPresenter : MainPresenterProtocol {
             return
         }
         
-        
+        let _ = conversionFetcher.fetchLatestRates { [weak self] (response, error) in
+            if let error = error {
+                self?.view?.displayError(withText: error.localizedDescription)
+            }
+            
+            guard let strongSelf = self, let response = response else {
+                return
+            }
+            
+            for outputCurrency in strongSelf.outputCurrencies {
+                let rate = response.rates[outputCurrency]
+                
+                let actualResult = Double(value) * rate
+                let roundedResult = actualResult.rounded(byDecimals: 5)
+                
+                self?.currentValues[outputCurrency] = roundedResult
+                
+                DispatchQueue.main.async {
+                    strongSelf.view?.updateOutput(forCurrency: outputCurrency, withRate: roundedResult)
+                }
+            }
+        }
     }
     
     // MARK: Generalized Exposed Presenter Operations
     
     func viewIsReady() {
-        view?.buildFormFields()
+        view?.buildFormFields(withOutputCurrencies: outputCurrencies)
     }
     
     func viewIsBeingDisplayed() {

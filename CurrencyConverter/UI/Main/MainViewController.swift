@@ -11,7 +11,11 @@ import Eureka
 
 protocol MainViewControllerProtocol : class {
     
-    func buildFormFields()
+    func buildFormFields(withOutputCurrencies currencies: [Currency])
+    
+    func updateOutput(forCurrency currency: Currency, withRate rate: Double)
+    
+    func displayError(withText text: String)
     
 }
 
@@ -35,10 +39,7 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
         struct Tag {
             static let inputFieldTag = "inputField"
             
-            static let poundsOutputFieldTag = "poundsOutputField"
-            static let euroOutputFieldTag = "euroOutputField"
-            static let yenOutputFieldTag = "yenOutputField"
-            static let reaisOutputFieldTag = "reaisOutputField"
+            static let genericOutputFieldTagSuffix = "OutputField"
         }
         
     }
@@ -56,6 +57,8 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
     var euroOutputTextRow: TextRow!
     var yenOutputTextRow: TextRow!
     var reaisOutputTextRow: TextRow!
+    
+    var outputCurrencyTextRows = [Currency: TextRow]()
     
     // MARK: Stored Properties
     
@@ -80,9 +83,21 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
     
     // MARK: Exposed Operations -> Protocol Exposed
     
-    func buildFormFields() {
+    func buildFormFields(withOutputCurrencies currencies: [Currency]) {
         buildInputFormFields()
-        buildOutputFormFields()
+        buildOutputFormFields(withOutputCurrencies: currencies)
+    }
+    
+    func updateOutput(forCurrency currency: Currency, withRate rate: Double) {
+        let outputRow = outputCurrencyTextRows[currency]
+        outputRow?.value = "\(rate) \(currency.raw)"
+        outputSection.reload()
+    }
+    
+    func displayError(withText text: String) {
+        let vc = UIAlertController(title: "Error", message: text, preferredStyle: .alert)
+        vc.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(vc, animated: true, completion: nil)
     }
     
     // MARK: Private Operations
@@ -116,37 +131,30 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
         cell.textField.isUserInteractionEnabled = false
     }
     
-    private func buildOutputFormFields() {
+    private func buildOutputFormFields(withOutputCurrencies currencies: [Currency]) {
         let outputSectionName = NSLocalizedString("resultsPerCurrencySectionTitle", comment: K.String.resultsPerCurrencySectionTitleComment)
         let secondsOutputCaption = NSLocalizedString("resultsForSecondsCaption", comment: K.String.resultsForSecondsCaption)
         
         let loadingCopy = NSLocalizedString("loadingCopy", comment: K.String.loadingCopyComment)
         
-        poundsOutputTextRow = TextRow(K.Tag.poundsOutputFieldTag) {
-            $0.title = " "
-            $0.value = loadingCopy
-        }.cellSetup(outputCellSetup)
-        
-        euroOutputTextRow = TextRow(K.Tag.euroOutputFieldTag) {
-            $0.title = secondsOutputCaption
-            $0.value = loadingCopy
-        }.cellSetup(outputCellSetup)
-        
-        yenOutputTextRow = TextRow(K.Tag.yenOutputFieldTag) {
-            $0.title = secondsOutputCaption
-            $0.value = loadingCopy
-        }.cellSetup(outputCellSetup)
-        
-        reaisOutputTextRow = TextRow(K.Tag.reaisOutputFieldTag) {
-            $0.title = secondsOutputCaption
-            $0.value = loadingCopy
-        }.cellSetup(outputCellSetup)
-        
         outputSection = Section(outputSectionName)
-            <<< poundsOutputTextRow
-            <<< euroOutputTextRow
-            <<< yenOutputTextRow
-            <<< reaisOutputTextRow
+        
+        for (index, outputCurrency) in currencies.enumerated() {
+            let textRow = TextRow("\(outputCurrency.raw.lowercased())\(K.Tag.genericOutputFieldTagSuffix)") {
+                $0.title = index > 0 ? secondsOutputCaption : " "
+                
+                if let currentValue = self.presenter.currentValues[outputCurrency], currentValue != nil {
+                    $0.value = "\(currentValue) \(outputCurrency.raw)"
+                } else {
+                    $0.value = loadingCopy
+                }
+                
+            }.cellSetup(outputCellSetup)
+            
+            outputCurrencyTextRows[outputCurrency] = textRow
+            
+            outputSection <<< textRow
+        }
         
         outputSection.hidden = Condition.function([K.Tag.inputFieldTag], {
             guard let inputTextRow = $0.rowBy(tag: K.Tag.inputFieldTag) as? TextRow, let value = inputTextRow.value, let intValue = Int(value) else {

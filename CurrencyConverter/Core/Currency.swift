@@ -14,4 +14,19 @@ enum Currency : String, Codable {
     case EUR
     case JPY
     case BRL
+    
+    var raw: String {
+        switch self {
+        case .USD:
+            return "USD"
+        case .GBP:
+            return "GBP"
+        case .EUR:
+            return "EUR"
+        case .JPY:
+            return "JPY"
+        case .BRL:
+            return "BRL"
+        }
+    }
 }
