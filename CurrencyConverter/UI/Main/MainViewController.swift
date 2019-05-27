@@ -96,6 +96,13 @@ class MainViewController : FormViewController, MainViewControllerProtocol {
             $0.value = K.String.numberOfOnesBillsFieldDefaultValue
         }.cellSetup({ cell, row in
             cell.textField.keyboardType = .numberPad
+        }).onChange({ [weak self] (row) in
+            guard let value = row.value, let intValue = Int(value) else {
+                // New value is not valid to process
+                return
+            }
+            
+            self?.presenter.numberOfDollarsDidChange(toValue: intValue)
         })
         
         inputSection = Section(inputSectionName)

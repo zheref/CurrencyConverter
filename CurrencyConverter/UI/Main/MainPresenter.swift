@@ -14,6 +14,8 @@ protocol MainPresenterProtocol : GenericPresenterProtocol {
     func attach(view: MainViewControllerProtocol)
     func dettachView()
     
+    func numberOfDollarsDidChange(toValue value: Int)
+    
 }
 
 class MainPresenter : MainPresenterProtocol {
@@ -41,6 +43,15 @@ class MainPresenter : MainPresenterProtocol {
     
     func dettachView() {
         self.view = nil
+    }
+    
+    func numberOfDollarsDidChange(toValue value: Int) {
+        guard value > 0 else {
+            // Do nothing because stack is fewer than 0
+            return
+        }
+        
+        
     }
     
     // MARK: Generalized Exposed Presenter Operations
